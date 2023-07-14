@@ -3,8 +3,9 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #CCCCCC;
-    color: #CCCCCC;
+    color: #99bbc0;
+    background-image: url(media/img/fondo.avif);
+    background-size: cover;
 }
 
 header {
@@ -23,7 +24,7 @@ nav ul li {
 }
 
 nav ul li a {
-    color: #CCCCCC;
+    color: #e2fafd;
     text-decoration: none;
     padding: 10px;
 }
@@ -33,7 +34,7 @@ section {
 }
 
 h1 {
-    color: #CCCCCC;
+    color: #e2fafd;
     width: max-content;
     border-radius: 5px;
 }
@@ -55,7 +56,7 @@ form {
     max-width: 400px;
     padding: 20px;
     background-color: rgba(255, 255, 255, 0.9);
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.377);
     border-radius: 5px;
 }
 
@@ -73,7 +74,7 @@ label {
 input,
 textarea {
     padding: 10px;
-    border: none;
+    border: 1px solid #0011ff5d;
     border-radius: 5px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
@@ -81,13 +82,43 @@ textarea {
 button {
     padding: 10px 20px;
     background-color: #11038c;
-    color: #ffffff;
+    color: #e2fafd;
     border: none;
     border-radius: 5px;
     cursor: pointer;
 }
 
+/* Estilos para los proyectos */
+.projects-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-gap: 20px;
+}
 
+.project {
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.377);
+    border-radius: 5px;
+}
+.project:hover {
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 10px rgba(29, 4, 255, 0.603);
+    border-radius: 7px;
+}
+.project h2 {
+    color: #11038c;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.project p {
+    color: #CCCCCC;
+}
+
+
+/* Configuraciones de pantalla */
 @media screen and (max-width: 767px) {
 
     /* Estilos para pantallas pequeñas */

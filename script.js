@@ -1,3 +1,4 @@
+// Animación cabecera secciones
 anime({
     targets: 'h1',
     backgroundColor: '#11038c',
@@ -8,7 +9,7 @@ anime({
     loop: false
 });
 
-// Animación del formulario con anime.js
+// Animación formulario
 anime({
     targets: '#contact-form',
     translateY: [-50, 0],
@@ -17,3 +18,11 @@ anime({
     easing: 'easeOutQuad'
 });
 
+// Animación proyectos
+anime({
+    targets: '.projects-container',
+    translateY: [-50, 0],
+    opacity: [0, 1],
+    duration: 1000,
+    easing: 'easeOutQuad'
+});
