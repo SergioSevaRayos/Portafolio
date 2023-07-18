@@ -2,7 +2,7 @@
 anime({
     targets: 'h1',
     backgroundColor: '#11038c',
-    duration: 400,
+    duration: 700,
     width: '100%', // -> from '28px' to '100%',
     easing: 'easeInOutQuad',
     direction: 'alternate',
@@ -26,3 +26,5 @@ anime({
     duration: 1000,
     easing: 'easeOutQuad'
 });
+strokeDashoffset: [anime.setDashoffset, 0]
+

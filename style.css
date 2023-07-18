@@ -6,6 +6,7 @@ body {
     color: #99bbc0;
     background-image: url(media/img/fondo.avif);
     background-size: cover;
+    background-attachment: fixed;
 }
 
 header {
@@ -101,12 +102,14 @@ button {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.377);
     border-radius: 5px;
 }
+
 .project:hover {
     padding: 20px;
     background-color: rgba(255, 255, 255, 0.9);
-    box-shadow: 0 0 10px rgba(29, 4, 255, 0.603);
-    border-radius: 7px;
+    box-shadow: 0 0 15px rgb(10, 2, 116);
+    border-radius: 9px;
 }
+
 .project h2 {
     color: #11038c;
     font-size: 24px;
@@ -115,6 +118,21 @@ button {
 
 .project p {
     color: #CCCCCC;
+}
+
+.styled-div {
+    border: 2px solid #11038c;
+    /* Borde de 2px de grosor y color negro (#333) */
+    background-color: rgba(4, 3, 114, 0.144);
+    /* Color de fondo translúcido (valor alfa de 0.5) */
+    box-shadow: 0 0 10px rgba(4, 0, 253, 0.781);
+    /* Sombra de fondo (10px de desenfoque) con color translúcido */
+    padding: 20px;
+    border-radius: 9px;
+}
+.styled-div p{
+    color: black;
+    font-size: 16px;
 }
 
 
