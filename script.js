@@ -1,9 +1,11 @@
 // Animación cabecera secciones
 anime({
     targets: 'h1',
-    backgroundColor: '#11038c',
-    duration: 700,
-    width: '100%', // -> from '28px' to '100%',
+    backgroundColor: '#000000',
+    boxShadow: '0px 0px 10px white', /* Sombras en todos los lados de color blanco */
+
+    duration: 400,
+    width: '100%', // -> desde '28px' hasta '100%'
     easing: 'easeInOutQuad',
     direction: 'alternate',
     loop: false

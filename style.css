@@ -1,18 +1,27 @@
 /* Estilos generales */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 10px;
     margin: 0;
     padding: 0;
     color: #99bbc0;
-    background-image: url(media/img/fondo.avif);
+    background-image: url(media/img/fondo1.jpg);
     background-size: cover;
     background-attachment: fixed;
 }
 
 header {
-    background-color: #11038c;
+    background-color: #000000;
+    padding: 20px;
+    box-shadow: 0 0 20px antiquewhite;
+    text-align: center;
+    height: 20px;
+}
+
+section {
     padding: 20px;
 }
+
 
 nav ul {
     list-style-type: none;
@@ -22,26 +31,53 @@ nav ul {
 
 nav ul li {
     display: inline;
+    padding: 20px;
+}
+
+/* Define el tamaño de fuente normal para el enlace */
+nav ul li a {
+    font-size: 16px;
+    /* Ajusta el tamaño de fuente inicial según tus preferencias */
+    transition: font-size 0.3s ease;
+    /* Agrega una transición suave a la propiedad font-size */
+}
+
+/* Aplica la animación al hacer hover en el enlace */
+nav ul li a:hover {
+    font-size: 90px;
+    /* Ajusta el tamaño de fuente al hacer hover según tus preferencias */
 }
 
 nav ul li a {
-    color: #e2fafd;
+    color: antiquewhite;
     text-decoration: none;
     padding: 10px;
 }
 
-section {
-    margin: 20px;
+/* Define el tamaño de fuente normal para el enlace */
+nav ul li a {
+    font-size: 16px;
+    /* Ajusta el tamaño de fuente inicial según tus preferencias */
+    transition: font-size 0.3s ease;
+    /* Agrega una transición suave a la propiedad font-size */
 }
 
+/* Aplica la animación al hacer hover en el enlace */
+nav ul li a:hover {
+    font-size: 20px;
+    /* Ajusta el tamaño de fuente al hacer hover según tus preferencias */
+}
+
+
 h1 {
-    color: #e2fafd;
+    color: antiquewhite;
     width: max-content;
+    text-align: right;
     border-radius: 5px;
 }
 
 p {
-    color: #330033;
+    color: antiquewhite;
 }
 
 .contact-section {
@@ -121,20 +157,15 @@ button {
 }
 
 .styled-div {
-    border: 2px solid #11038c;
+
     /* Borde de 2px de grosor y color negro (#333) */
-    background-color: rgba(4, 3, 114, 0.144);
+    background-color: rgb(0, 0, 0);
     /* Color de fondo translúcido (valor alfa de 0.5) */
-    box-shadow: 0 0 10px rgba(4, 0, 253, 0.781);
+    box-shadow: 0 0 10px #faebd7;
     /* Sombra de fondo (10px de desenfoque) con color translúcido */
     padding: 20px;
     border-radius: 9px;
 }
-.styled-div p{
-    color: black;
-    font-size: 16px;
-}
-
 
 /* Configuraciones de pantalla */
 @media screen and (max-width: 767px) {
