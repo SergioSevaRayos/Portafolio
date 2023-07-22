@@ -4,16 +4,17 @@ body {
     font-size: 10px;
     margin: 0;
     padding: 0;
-    color: #99bbc0;
+    color: aliceblue;
     background-image: url(media/img/fondo1.jpg);
     background-size: cover;
     background-attachment: fixed;
+
 }
 
 header {
     background-color: #000000;
     padding: 20px;
-    box-shadow: 0 0 20px antiquewhite;
+    box-shadow: 0 0 20px aliceblue;
     text-align: center;
     height: 20px;
 }
@@ -49,7 +50,7 @@ nav ul li a:hover {
 }
 
 nav ul li a {
-    color: antiquewhite;
+    color: aliceblue;
     text-decoration: none;
     padding: 10px;
 }
@@ -70,14 +71,14 @@ nav ul li a:hover {
 
 
 h1 {
-    color: antiquewhite;
+    color: aliceblue;
     width: max-content;
-    text-align: right;
+    text-align: center;
     border-radius: 5px;
 }
 
 p {
-    color: antiquewhite;
+    color: aliceblue;
 }
 
 .contact-section {
@@ -93,7 +94,7 @@ form {
     max-width: 400px;
     padding: 20px;
     background-color: rgba(0, 0, 0, 0.9);
-    box-shadow: 0 0 10px antiquewhite;
+    box-shadow: 0 0 10px aliceblue;
     border-radius: 5px;
 }
 
@@ -101,7 +102,7 @@ form {
     display: grid;
     grid-template-columns: 100px 1fr;
     align-items: center;
-    color: antiquewhite;
+    color: aliceblue;
 }
 
 label {
@@ -118,7 +119,7 @@ textarea {
 button {
     padding: 10px 20px;
     background-color: #18181a;
-    color: #e2fafd;
+    color: aliceblue;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -133,37 +134,64 @@ button {
 
 .project {
     padding: 20px;
-    background-color: rgba(255, 255, 255, 0.9);
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.377);
+    background-color: black;
+    box-shadow: 0 0 10px rgba(54, 54, 54, 0.377);
     border-radius: 5px;
 }
 
 .project:hover {
     padding: 20px;
-    background-color: rgba(255, 255, 255, 0.9);
-    box-shadow: 0 0 15px rgb(10, 2, 116);
+    box-shadow: 0 0 15px aliceblue;
     border-radius: 9px;
 }
 
 .project h2 {
-    color: #11038c;
+    color: aliceblue;
     font-size: 24px;
-    margin-bottom: 10px;
+    margin-bottom: 11px;
 }
 
 .project p {
-    color: #CCCCCC;
+    color: aliceblue;
 }
 
 .styled-div {
-
     /* Borde de 2px de grosor y color negro (#333) */
     background-color: rgb(0, 0, 0);
     /* Color de fondo translúcido (valor alfa de 0.5) */
-    box-shadow: 0 0 10px #faebd7;
+    box-shadow: 0 0 10px aliceblue;
     /* Sombra de fondo (10px de desenfoque) con color translúcido */
     padding: 20px;
     border-radius: 9px;
+}
+
+/* Estilos para el rectángulo */
+.rectangle {
+    width: 200px;
+    height: 50px;
+    color: aliceblue;
+    background-color: #000000;
+    box-shadow: 0 0 10px aliceblue;
+    text-align: center;
+    line-height: 50px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Estilos para el div oculto */
+#hidden-div {
+    display: none;
+    margin-top: 20px;
+    opacity: 0;
+    /* El div está oculto al principio */
+    transition: opacity 0.5s ease;
+    /* Transición suave para la opacidad */
+}
+
+/* Estilos para el párrafo oculto */
+#hidden-text {
+    display: block;
+    font-size: 14px;
 }
 
 /* Configuraciones de pantalla */

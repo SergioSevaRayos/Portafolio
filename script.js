@@ -25,8 +25,27 @@ anime({
     targets: '.projects-container',
     translateY: [-50, 0],
     opacity: [0, 1],
-    duration: 1000,
+    duration: 500,
     easing: 'easeOutQuad'
 });
 strokeDashoffset: [anime.setDashoffset, 0]
 
+function toggleText() {
+  var divElement = document.getElementById("hidden-div");
+  var currentOpacity = parseFloat(window.getComputedStyle(divElement).opacity);
+
+  if (currentOpacity === 0) {
+    divElement.style.display = "block";
+    setTimeout(function() {
+      divElement.style.opacity = 1;
+    }, 10); // Pequeño retardo para que la transición funcione correctamente
+  } else {
+    divElement.style.opacity = 0;
+    setTimeout(function() {
+      divElement.style.display = "none";
+    }, 500); // Tiempo de transición de 0.5 segundos
+  }
+}
+
+
+  
