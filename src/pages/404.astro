@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import { withBase } from '../lib/url';
 ---
 
 <Base title="Página no encontrada" description="La página que buscas no existe.">
@@ -8,7 +9,7 @@ import Base from '../layouts/Base.astro';
     <h1 class="font-display text-3xl sm:text-4xl font-bold text-ink mb-4">Esta página no está en el registro.</h1>
     <p class="text-ink-dim mb-8">La ruta que buscas no existe o se ha movido.</p>
     <a
-      href="/"
+      href={withBase('/')}
       class="font-label text-xs px-5 py-3 rounded-full bg-signal text-bg font-medium hover:bg-signal-dim transition-colors inline-block"
     >
       Volver al inicio

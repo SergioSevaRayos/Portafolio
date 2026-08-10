@@ -7,6 +7,7 @@ import TechChip from '../components/project/TechChip.astro';
 import MetricRail from '../components/project/MetricRail.astro';
 import Gallery from '../components/project/Gallery.astro';
 import Prose from '../components/ui/Prose.astro';
+import { withBase } from '../lib/url';
 
 interface Props {
   project: CollectionEntry<'projects'>;
@@ -129,7 +130,7 @@ const dateRange = dates.end
       </div>
 
       <div class="border-t border-border py-8">
-        <a href="/proyectos" class="font-label text-xs text-ink-dim hover:text-signal transition-colors">
+        <a href={withBase('/proyectos')} class="font-label text-xs text-ink-dim hover:text-signal transition-colors">
           ← Todos los proyectos
         </a>
       </div>

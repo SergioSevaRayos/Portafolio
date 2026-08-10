@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import heroPhoto from '../assets/sergio-hero.jpg';
+import { withBase } from '../lib/url';
 
 const interests = ['Arduino', 'ESP32', 'Raspberry Pi', 'Sensores y actuadores', 'Robótica', 'Docencia'];
 ---
@@ -23,13 +24,13 @@ const interests = ['Arduino', 'ESP32', 'Raspberry Pi', 'Sensores y actuadores', 
         </p>
         <div class="flex flex-wrap gap-4">
           <a
-            href="/proyectos"
+            href={withBase('/proyectos')}
             class="font-label text-xs px-5 py-3 rounded-full bg-signal text-bg font-medium hover:bg-signal-dim transition-colors"
           >
             Ver proyectos
           </a>
           <a
-            href="/sobre-mi"
+            href={withBase('/sobre-mi')}
             class="font-label text-xs px-5 py-3 rounded-full border border-border text-ink-dim hover:border-signal hover:text-signal transition-colors"
           >
             Sobre mí

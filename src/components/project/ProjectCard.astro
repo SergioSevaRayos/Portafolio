@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import StatusBadge from './StatusBadge.astro';
 import TechChip from './TechChip.astro';
+import { withBase } from '../../lib/url';
 
 interface Props {
   project: CollectionEntry<'projects'>;
@@ -11,7 +12,7 @@ interface Props {
 const { project } = Astro.props;
 const { title, tagline, status, category, tech, hero, thumbnail } = project.data;
 const cardImage = thumbnail ?? hero;
-const href = `/proyectos/${project.id}`;
+const href = withBase(`/proyectos/${project.id}`);
 ---
 
 <a

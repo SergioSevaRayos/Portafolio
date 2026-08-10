@@ -19,6 +19,8 @@ featured: false
 order: 70
 ---
 
+import { withBase } from '../../../lib/url';
+
 ## Contexto
 
 *Glycera dibranchiata* es un poliqueto marino muy demandado como cebo de pesca, y hasta ahora depende casi por completo de la extracción del medio natural. La pregunta de partida era simple: ¿se puede mantener y criar en cautividad, con un sistema controlado, en vez de depender solo de la extracción?
@@ -47,7 +49,7 @@ order: 70
 Cada fase no es solo una temperatura fija, sino una rampa: la tabla completa incluye el sentido y la magnitud del cambio térmico entre fases (incrementos de 2 °C en el crecimiento, un descenso de 4 °C para inducir la maduración sexual), reproduciendo las señales estacionales que en el medio natural dispara el propio mar.
 
 <video
-  src="/videos/acuicultura-movimiento.mp4"
+  src={withBase('/videos/acuicultura-movimiento.mp4')}
   autoplay
   muted
   loop

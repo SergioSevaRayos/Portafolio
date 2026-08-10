@@ -4,6 +4,7 @@ import { ClientRouter } from 'astro:transitions';
 import '../styles/global.css';
 import Meta from '../components/seo/Meta.astro';
 import JsonLd from '../components/seo/JsonLd.astro';
+import { withBase } from '../lib/url';
 
 interface Props {
   title: string;
@@ -19,7 +20,7 @@ const { title, description, image } = Astro.props;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href={withBase('/favicon.svg')} type="image/svg+xml" />
     <Meta title={title} description={description} image={image} />
     <JsonLd />
 
@@ -32,13 +33,13 @@ const { title, description, image } = Astro.props;
   <body class="min-h-screen flex flex-col">
     <header class="border-b border-border sticky top-0 z-30 bg-bg">
       <div class="mx-auto max-w-6xl px-6 py-5 flex items-center justify-between">
-        <a href="/" class="font-display font-bold text-lg tracking-tight text-ink hover:text-signal transition-colors">
+        <a href={withBase('/')} class="font-display font-bold text-lg tracking-tight text-ink hover:text-signal transition-colors">
           Sergio Seva Rayos
         </a>
 
         <nav class="hidden sm:flex items-center gap-6 font-label text-xs text-ink-dim">
-          <a href="/proyectos" class="hover:text-signal transition-colors">Proyectos</a>
-          <a href="/sobre-mi" class="hover:text-signal transition-colors">Sobre mí</a>
+          <a href={withBase('/proyectos')} class="hover:text-signal transition-colors">Proyectos</a>
+          <a href={withBase('/sobre-mi')} class="hover:text-signal transition-colors">Sobre mí</a>
           <a href="mailto:sergiosevarayos@gmail.com" class="hover:text-signal transition-colors">Contacto</a>
         </nav>
       </div>
@@ -57,10 +58,10 @@ const { title, description, image } = Astro.props;
       data-mobile-menu
       class="sm:hidden fixed top-0 right-0 z-50 h-full w-72 max-w-[80vw] bg-panel border-l border-border flex flex-col pt-24 translate-x-full transition-transform duration-300 ease-out"
     >
-      <a href="/proyectos" class="block px-6 py-4 font-label text-xs text-ink-dim hover:text-signal hover:bg-panel-raised transition-colors border-b border-border">
+      <a href={withBase('/proyectos')} class="block px-6 py-4 font-label text-xs text-ink-dim hover:text-signal hover:bg-panel-raised transition-colors border-b border-border">
         Proyectos
       </a>
-      <a href="/sobre-mi" class="block px-6 py-4 font-label text-xs text-ink-dim hover:text-signal hover:bg-panel-raised transition-colors border-b border-border">
+      <a href={withBase('/sobre-mi')} class="block px-6 py-4 font-label text-xs text-ink-dim hover:text-signal hover:bg-panel-raised transition-colors border-b border-border">
         Sobre mí
       </a>
       <a href="mailto:sergiosevarayos@gmail.com" class="block px-6 py-4 font-label text-xs text-ink-dim hover:text-signal hover:bg-panel-raised transition-colors">
