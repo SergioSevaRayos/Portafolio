@@ -1,10 +1,16 @@
 ---
 import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
+import ProjectCard from '../components/project/ProjectCard.astro';
 import heroPhoto from '../assets/sergio-hero.jpg';
 import { withBase } from '../lib/url';
 
 const interests = ['Arduino', 'ESP32', 'Raspberry Pi', 'Sensores y actuadores', 'Robótica', 'Docencia'];
+
+const featured = (await getCollection('projects', ({ data }) => !data.draft))
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 3);
 ---
 
 <Base
@@ -12,17 +18,24 @@ const interests = ['Arduino', 'ESP32', 'Raspberry Pi', 'Sensores y actuadores', 
   description="Desarrollador de software y hardware — aplicaciones web, e-commerce y sistemas IoT en producción."
 >
   <section class="mx-auto max-w-6xl px-6 pt-20 pb-10">
-    <div class="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-10 items-start mb-14">
+    <div class="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-10 items-start mb-16">
       <div>
         <p class="font-label text-signal text-xs mb-4">Sergio Seva Rayos — full-stack, robótica e IoT</p>
         <h1 class="font-display text-4xl sm:text-6xl font-bold text-ink max-w-3xl leading-[1.05] mb-6">
           Desarrollo software y hardware que se mide, no se adivina.
         </h1>
-        <p class="text-ink-dim max-w-xl mb-10">
+        <p class="text-ink-dim max-w-xl mb-4">
           Aplicaciones web, e-commerce y sistemas IoT en producción real — desde el backend hasta el sensor
           que le manda los datos.
         </p>
-        <div class="flex flex-wrap gap-4">
+        <p class="text-ink-dim max-w-xl mb-10">
+          De la robótica industrial a la programación web, sin soltar nunca el soldador —
+          <a href={withBase('/sobre-mi')} class="text-signal hover:text-signal-dim underline underline-offset-4">
+            mi historia completa aquí
+          </a>.
+        </p>
+
+        <div class="flex flex-wrap gap-4 mb-10">
           <a
             href={withBase('/proyectos')}
             class="font-label text-xs px-5 py-3 rounded-full bg-signal text-bg font-medium hover:bg-signal-dim transition-colors"
@@ -30,11 +43,21 @@ const interests = ['Arduino', 'ESP32', 'Raspberry Pi', 'Sensores y actuadores', 
             Ver proyectos
           </a>
           <a
-            href={withBase('/sobre-mi')}
+            href="mailto:sergiosevarayos@gmail.com"
             class="font-label text-xs px-5 py-3 rounded-full border border-border text-ink-dim hover:border-signal hover:text-signal transition-colors"
           >
-            Sobre mí
+            Contacto
           </a>
+        </div>
+
+        <div class="flex flex-wrap gap-1.5">
+          {
+            interests.map((interest) => (
+              <span class="font-label text-[0.65rem] px-2.5 py-1 rounded-full border border-border text-ink-dim">
+                {interest}
+              </span>
+            ))
+          }
         </div>
       </div>
 
@@ -56,21 +79,17 @@ const interests = ['Arduino', 'ESP32', 'Raspberry Pi', 'Sensores y actuadores', 
     </div>
 
     <div class="border-t border-border pt-10">
-      <p class="font-label text-ink-faint text-xs mb-6">Quién soy</p>
-      <p class="max-w-2xl text-ink-dim leading-relaxed mb-6">
-        De la robótica industrial a la programación web, sin soltar nunca el soldador —
-        <a href={withBase('/sobre-mi')} class="text-signal hover:text-signal-dim underline underline-offset-4">
-          mi historia completa aquí
-        </a>.
-      </p>
-      <div class="flex flex-wrap gap-1.5">
-        {
-          interests.map((interest) => (
-            <span class="font-label text-[0.65rem] px-2.5 py-1 rounded-full border border-border text-ink-dim">
-              {interest}
-            </span>
-          ))
-        }
+      <div class="flex items-end justify-between gap-4 mb-6">
+        <p class="font-label text-ink-faint text-xs">Proyectos destacados</p>
+        <a
+          href={withBase('/proyectos')}
+          class="font-label text-xs text-ink-dim hover:text-signal transition-colors whitespace-nowrap"
+        >
+          Ver todos →
+        </a>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        {featured.map((project) => <ProjectCard project={project} />)}
       </div>
     </div>
   </section>
