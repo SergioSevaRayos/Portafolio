@@ -38,6 +38,8 @@ import { withBase } from '../../../lib/url';
 - **Fotoperiodo simulado**: iluminación controlada por PWM que imita la salida y puesta del sol, ajustando gradualmente la proporción de horas de luz y oscuridad según la fase.
 - **Protocolo de 5 fases**, diseñado para replicar el ciclo metabólico natural completo en 24 semanas (6 meses):
 
+<div class="hidden sm:block">
+
 | Fase | Temperatura | Fotoperiodo | Duración |
 |---|---|---|---|
 | Larva | 12–14 °C | 12L:12D | 4–6 semanas |
@@ -45,6 +47,36 @@ import { withBase } from '../../../lib/url';
 | Pre-adulto | 16–18 °C | 16L:8D | 10–12 semanas |
 | Maduración sexual | 12–14 °C (−4 °C) | 12L:12D | 4–6 semanas |
 | Reproducción | 10–12 °C | 10L:14D | 1–2 semanas |
+
+</div>
+
+<div class="sm:hidden space-y-3 mb-6">
+  {[
+    { fase: 'Larva', temp: '12–14 °C', foto: '12L:12D', duracion: '4–6 semanas' },
+    { fase: 'Crecimiento juvenil', temp: '14–16 °C', foto: '14L:10D', duracion: '8–10 semanas' },
+    { fase: 'Pre-adulto', temp: '16–18 °C', foto: '16L:8D', duracion: '10–12 semanas' },
+    { fase: 'Maduración sexual', temp: '12–14 °C (−4 °C)', foto: '12L:12D', duracion: '4–6 semanas' },
+    { fase: 'Reproducción', temp: '10–12 °C', foto: '10L:14D', duracion: '1–2 semanas' },
+  ].map((f) => (
+    <div class="rounded-lg border border-border bg-panel p-4">
+      <p class="font-display font-bold text-ink mb-2">{f.fase}</p>
+      <dl class="grid grid-cols-3 gap-2 text-xs">
+        <div>
+          <dt class="font-label text-[0.6rem] text-ink-faint mb-0.5">Temp.</dt>
+          <dd class="text-ink-dim">{f.temp}</dd>
+        </div>
+        <div>
+          <dt class="font-label text-[0.6rem] text-ink-faint mb-0.5">Fotoperiodo</dt>
+          <dd class="text-ink-dim">{f.foto}</dd>
+        </div>
+        <div>
+          <dt class="font-label text-[0.6rem] text-ink-faint mb-0.5">Duración</dt>
+          <dd class="text-ink-dim">{f.duracion}</dd>
+        </div>
+      </dl>
+    </div>
+  ))}
+</div>
 
 Cada fase no es solo una temperatura fija, sino una rampa: la tabla completa incluye el sentido y la magnitud del cambio térmico entre fases (incrementos de 2 °C en el crecimiento, un descenso de 4 °C para inducir la maduración sexual), reproduciendo las señales estacionales que en el medio natural dispara el propio mar.
 
