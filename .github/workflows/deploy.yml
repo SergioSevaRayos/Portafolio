@@ -21,11 +21,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Build with Astro
+        # withastro/action@v6 checks out deps, builds, and uploads the Pages
+        # artifact itself — an extra actions/upload-pages-artifact step here
+        # collides with it (duplicate artifact name) and fails the run.
         uses: withastro/action@v6
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./dist
 
   deploy:
     needs: build
