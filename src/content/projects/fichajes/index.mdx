@@ -1,0 +1,38 @@
+---
+title: "Fichajes"
+tagline: "SaaS de control horario multiempresa, con fichaje por Telegram y WhatsApp."
+category: "web-app"
+status: "live"
+role: "Desarrollo full-stack (Laravel + Vue)"
+tech: ["laravel", "vue", "php", "mysql"]
+hero: "./hero.png"
+dates:
+  start: 2026-03-01
+featured: false
+order: 40
+---
+
+## Contexto
+
+Un control horario tradicional obliga al empleado a fichar desde un dispositivo concreto. Fichajes es un SaaS multiempresa de control horario y gestión laboral pensado para que fichar sea tan simple como enviar un mensaje: además del panel web, admite fichar por Telegram o WhatsApp.
+
+## Restricciones
+
+- Multiempresa real, con roles y permisos delimitados por equipo (no solo por usuario).
+- El historial laboral tiene que conservar el estado de cada empleado tal y como era en cada momento — un cambio de turno o de convenio hoy no puede alterar cómo se veía el registro de hace tres meses.
+- Fichar por chat implica recibir webhooks externos (Telegram, WhatsApp) sin la protección CSRF habitual de un formulario del propio sitio.
+
+## Arquitectura
+
+- Laravel 11 + Inertia.js + Vue 3, sobre una base Jetstream con equipos (`HasTeams`) y Spatie Permission con permisos delimitados por equipo.
+- **Historial laboral con versionado temporal (SCD tipo 2)**: cada cambio en las condiciones de un empleado crea un nuevo registro con su propio rango de vigencia, en vez de sobrescribir el anterior — así cualquier informe histórico refleja las condiciones reales de esa fecha, no las actuales.
+- **Fichaje multicanal**: controladores de webhook dedicados para Telegram y WhatsApp, exentos de CSRF y vinculados al empleado por su identificador de chat.
+- Tareas programadas: cálculo diario de estadísticas, recálculo de estados en los cambios de día, notificaciones proactivas (turno largo, descanso largo, olvido de fichar) y avisos de caducidad de suscripción.
+
+## La parte difícil
+
+Un fichaje puede llegar por tres vías distintas (web, Telegram, WhatsApp) pero el estado del empleado — trabajando, en descanso, ausente — tiene que ser uno solo y consistente entre las tres, incluyendo los casos límite de medianoche: una ausencia que empieza un día y termina al siguiente no puede dejar al empleado en un estado contradictorio en el cambio de día. Por eso el estado no se calcula al vuelo en cada vista, sino que un job programado lo recalcula de forma centralizada para todos los empleados a diario.
+
+## Resultado
+
+Plataforma en producción, con el control horario, el fichaje multicanal y el historial laboral versionado funcionando en real para varias empresas.

@@ -1,0 +1,28 @@
+---
+title: "CocoFibra"
+tagline: "Web comercial de un proveedor de fibra y móvil, con comprobador de cobertura por localidad."
+category: "site"
+status: "live"
+role: "Desarrollo frontend"
+tech: ["astro", "tailwind", "motion", "aos"]
+hero: "./hero.png"
+thumbnail: "./thumbnail.png"
+links:
+  live: "https://www.cocofibramovil.es/"
+dates:
+  start: 2026-06-01
+featured: false
+order: 50
+---
+
+## Contexto
+
+CocoFibra es una comercializadora de fibra y móvil: vende sus propias tarifas, no las compara con las de terceros. La web comercial vive o muere por dos cosas: que el usuario encuentre su tarifa en segundos, y que la cobertura mostrada sea real para su localidad y no una promesa genérica. Es un sitio estático construido con esa prioridad — velocidad de carga y claridad de la oferta por encima de cualquier efecto visual.
+
+## Arquitectura
+
+Astro en salida estática con Tailwind CSS, animaciones de entrada por scroll (AOS) y transiciones puntuales con Motion. Al ser contenido mayoritariamente estático — tarifas, localidades, preguntas frecuentes — Astro permite servir HTML ya renderizado sin runtime de framework en el cliente, con el JavaScript reducido a las animaciones.
+
+## Resultado
+
+Sitio en producción, con el catálogo de tarifas propias y el comprobador de cobertura por localidad funcionando en real.

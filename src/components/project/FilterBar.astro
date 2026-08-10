@@ -1,0 +1,66 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { CATEGORY_LABEL, type ProjectCategory } from '../../lib/category';
+import { resolveTech } from '../../lib/tech';
+
+interface Props {
+  projects: CollectionEntry<'projects'>[];
+}
+
+const { projects } = Astro.props;
+
+const categories = [...new Set(projects.map((p) => p.data.category))] as ProjectCategory[];
+const techSlugs = [...new Set(projects.flatMap((p) => p.data.tech))].sort();
+---
+
+<div data-filter-bar class="flex flex-col gap-4 mb-10">
+  <div class="flex flex-wrap gap-2">
+    <button
+      type="button"
+      data-filter-cat=""
+      aria-pressed="true"
+      class="filter-pill filter-pill--cat font-label text-[0.65rem] px-3 py-1.5 rounded-full border border-border text-ink-dim transition-colors"
+    >
+      Todas
+    </button>
+    {
+      categories.map((cat) => (
+        <button
+          type="button"
+          data-filter-cat={cat}
+          aria-pressed="false"
+          class="filter-pill filter-pill--cat font-label text-[0.65rem] px-3 py-1.5 rounded-full border border-border text-ink-dim transition-colors"
+        >
+          {CATEGORY_LABEL[cat]}
+        </button>
+      ))
+    }
+  </div>
+
+  <div class="flex flex-wrap gap-1.5">
+    {
+      techSlugs.map((slug) => (
+        <button
+          type="button"
+          data-filter-tech={slug}
+          aria-pressed="false"
+          class="filter-pill filter-pill--tech font-label text-[0.6rem] px-2.5 py-1 rounded-full border border-border text-ink-faint transition-colors"
+        >
+          {resolveTech(slug).label}
+        </button>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .filter-pill[aria-pressed='true'] {
+    border-color: var(--color-signal);
+    color: var(--color-signal);
+  }
+  .filter-pill:hover {
+    border-color: var(--color-signal);
+  }
+</style>
+
+<script src="../../lib/filters.client.ts"></script>

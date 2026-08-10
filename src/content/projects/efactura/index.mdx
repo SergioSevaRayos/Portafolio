@@ -1,0 +1,47 @@
+---
+title: "eFactura"
+tagline: "SaaS de facturación electrónica conforme a VeriFactu, con cadena de huellas firmada digitalmente."
+category: "web-app"
+status: "live"
+role: "Desarrollo full-stack (Laravel + Vue)"
+client: "Cliente del sector asesoría/gestión"
+tech: ["laravel", "vue", "php", "mysql", "stripe", "verifactu"]
+hero: "./hero.png"
+dates:
+  start: 2026-01-01
+metrics:
+  - label: "Commits"
+    value: "1.411+"
+  - label: "Firma digital"
+    value: "RSA-SHA256"
+  - label: "Arquitectura"
+    value: "Multi-empresa"
+featured: true
+order: 15
+---
+
+## Contexto
+
+VeriFactu es el sistema español que exige que cada factura emitida quede registrada de forma que no se pueda alterar ni borrar a posteriori sin que se note: cada registro incluye la huella (hash) del anterior, formando una cadena, y opcionalmente se remite en tiempo real a la AEAT. eFactura es un SaaS multiempresa que genera, firma y encadena esas facturas para varias empresas cliente de una asesoría, cada una con su propio certificado digital.
+
+## Restricciones
+
+- **La cadena de huellas no admite fallos silenciosos**: si un registro se genera con el hash anterior incorrecto, toda la cadena posterior queda inválida frente a una inspección — no hay margen para "arreglarlo después".
+- Multiempresa real: un mismo usuario (por ejemplo, una asesoría) gestiona varias empresas cliente distintas, cada una con sus propios datos, certificado de firma y estado de suscripción — sin que se puedan mezclar datos entre empresas.
+- Pagos por suscripción (Stripe) con lógica de expiración de plan y permisos por rol, no solo un checkout puntual.
+
+## Arquitectura
+
+- **Backend**: Laravel 11, con Inertia.js conectando directamente con Vue 3 sin una API REST separada — los controladores devuelven `Inertia::render()` en vez de JSON a mano.
+- **Firma y cadena VeriFactu**: cada factura genera un XML canónico, se calcula su huella SHA-256 encadenando la huella de la factura anterior, y se firma digitalmente (RSA-SHA256) con el certificado de la empresa correspondiente antes de registrarse.
+- **Integración AEAT**: un cliente HTTP dedicado envía los registros firmados a la API de VeriFactu de la Agencia Tributaria.
+- **Captura de facturas por email**: además de la carga manual, el sistema puede leer facturas recibidas por IMAP y extraerlas automáticamente, reduciendo la carga manual de una asesoría que gestiona muchas empresas cliente a la vez.
+- **Permisos**: roles y permisos por empresa (Spatie Laravel Permission), con un patrón de borrado lógico (`dt_end`) en vez de borrado físico en todo el sistema — ningún registro de facturación desaparece nunca de verdad.
+
+## La parte difícil
+
+Encadenar huellas es sencillo sobre el papel; mantenerlo correcto bajo concurrencia real no lo es. Si dos facturas de la misma empresa se generan casi a la vez, ambas pueden intentar leer "la última huella" al mismo tiempo y calcular su propio hash a partir del mismo valor anterior — rompiendo la cadena de forma silenciosa, sin que salte ningún error hasta que alguien intenta verificarla. La generación del registro de factura tuvo que tratarse como una sección crítica estrictamente secuencial por empresa, no como una operación más del controlador.
+
+## Resultado
+
+Sistema en producción real gestionando la facturación conforme a VeriFactu de varias empresas cliente de una asesoría, con envío a AEAT, firma digital por certificado propio de cada empresa y más de 1.400 commits de desarrollo continuado — el proyecto más longevo de este portafolio.

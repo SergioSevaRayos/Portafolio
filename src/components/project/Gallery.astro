@@ -1,0 +1,24 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  images: { src: ImageMetadata; alt: string; caption?: string }[];
+}
+
+const { images } = Astro.props;
+---
+
+{
+  images.length > 0 && (
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 my-8">
+      {images.map((img) => (
+        <figure class="rounded-lg overflow-hidden border border-border bg-panel">
+          {/* Native width/height — no forced crop, each screenshot keeps its own aspect ratio. */}
+          <Image src={img.src} alt={img.alt} width={img.src.width} height={img.src.height} class="w-full h-auto" />
+          {img.caption && <figcaption class="px-3 py-2 text-xs text-ink-faint font-label">{img.caption}</figcaption>}
+        </figure>
+      ))}
+    </div>
+  )
+}

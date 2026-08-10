@@ -1,0 +1,30 @@
+---
+import { STATUS, type ProjectStatus } from '../../lib/status';
+
+interface Props {
+  status: ProjectStatus;
+  transitionName?: string;
+}
+
+const { status, transitionName } = Astro.props;
+const entry = STATUS[status];
+
+const dotClass: Record<typeof entry.color, string> = {
+  signal: 'bg-signal',
+  amber: 'bg-amber',
+  'status-gray': 'bg-status-gray',
+};
+const textClass: Record<typeof entry.color, string> = {
+  signal: 'text-signal',
+  amber: 'text-amber',
+  'status-gray': 'text-ink-faint',
+};
+---
+
+<span
+  class:list={['inline-flex items-center gap-1.5 font-label text-[0.65rem]', textClass[entry.color]]}
+  transition:name={transitionName}
+>
+  <span class:list={['h-1.5 w-1.5 rounded-full', dotClass[entry.color]]}></span>
+  {entry.label}
+</span>

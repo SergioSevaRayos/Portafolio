@@ -1,0 +1,138 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import Base from './Base.astro';
+import StatusBadge from '../components/project/StatusBadge.astro';
+import TechChip from '../components/project/TechChip.astro';
+import MetricRail from '../components/project/MetricRail.astro';
+import Gallery from '../components/project/Gallery.astro';
+import Prose from '../components/ui/Prose.astro';
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+}
+
+const { project } = Astro.props;
+const { title, tagline, status, role, client, tech, hero, gallery, links, dates, metrics } = project.data;
+// Zod's `.default({})` on the outer `links` object is a literal fallback —
+// it doesn't re-run the inner schema, so `related` is missing (not `[]`)
+// when a project omits `links` entirely.
+const relatedLinks = links.related ?? [];
+
+const dateFmt = new Intl.DateTimeFormat('es-ES', { year: 'numeric', month: 'long' });
+const dateRange = dates.end
+  ? `${dateFmt.format(dates.start)} — ${dateFmt.format(dates.end)}`
+  : `${dateFmt.format(dates.start)} — actualidad`;
+---
+
+<Base title={title} description={tagline}>
+  <article>
+    <div
+      class="w-full max-h-[560px] flex items-center justify-center overflow-hidden bg-panel-raised border-b border-border"
+      transition:name={`hero-${project.id}`}
+    >
+      {
+        /* Native width/height — no server-side crop. Real product
+           screenshots vary wildly in aspect ratio (a login form vs. a wide
+           dashboard); object-contain + max-height shows the whole thing
+           letterboxed instead of cropping into the UI. */
+      }
+      <Image
+        src={hero}
+        alt={title}
+        width={hero.width}
+        height={hero.height}
+        class="w-full h-auto max-h-[560px] object-contain"
+        priority
+      />
+    </div>
+
+    <div class="mx-auto max-w-6xl px-6">
+      <div class="flex flex-wrap items-center justify-between gap-3 pt-8 pb-2">
+        <h1 class="font-display text-3xl sm:text-4xl font-bold text-ink" transition:name={`title-${project.id}`}>
+          {title}
+        </h1>
+        <StatusBadge status={status} transitionName={`status-${project.id}`} />
+      </div>
+      <p class="text-ink-dim max-w-2xl mb-8">{tagline}</p>
+
+      <MetricRail metrics={metrics} />
+
+      <div class="grid grid-cols-1 lg:grid-cols-[220px_1fr] gap-10 py-10">
+        <aside class="space-y-6">
+          <div>
+            <p class="font-label text-[0.65rem] text-ink-faint mb-1">Rol</p>
+            <p class="text-sm text-ink">{role}</p>
+          </div>
+          {
+            client && (
+              <div>
+                <p class="font-label text-[0.65rem] text-ink-faint mb-1">Cliente</p>
+                <p class="text-sm text-ink">{client}</p>
+              </div>
+            )
+          }
+          <div>
+            <p class="font-label text-[0.65rem] text-ink-faint mb-1">Fechas</p>
+            <p class="text-sm text-ink">{dateRange}</p>
+          </div>
+          <div>
+            <p class="font-label text-[0.65rem] text-ink-faint mb-2">Stack</p>
+            <div class="flex flex-wrap gap-1.5">
+              {tech.map((slug) => <TechChip slug={slug} />)}
+            </div>
+          </div>
+          {
+            (links.live || links.repo || relatedLinks.length > 0) && (
+              <div class="flex flex-col gap-2 pt-2">
+                {links.live && (
+                  <a
+                    href={links.live}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="font-label text-xs text-signal hover:underline"
+                  >
+                    Ver en producción →
+                  </a>
+                )}
+                {links.repo && (
+                  <a
+                    href={links.repo}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="font-label text-xs text-ink-dim hover:text-signal"
+                  >
+                    Repositorio →
+                  </a>
+                )}
+                {relatedLinks.map((rel) => (
+                  <a
+                    href={rel.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="font-label text-xs text-ink-dim hover:text-signal"
+                  >
+                    {rel.label} →
+                  </a>
+                ))}
+              </div>
+            )
+          }
+        </aside>
+
+        <div>
+          <Prose>
+            <slot />
+          </Prose>
+          <Gallery images={gallery} />
+        </div>
+      </div>
+
+      <div class="border-t border-border py-8">
+        <a href="/proyectos" class="font-label text-xs text-ink-dim hover:text-signal transition-colors">
+          ← Todos los proyectos
+        </a>
+      </div>
+    </div>
+  </article>
+</Base>

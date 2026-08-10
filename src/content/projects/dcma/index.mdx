@@ -1,0 +1,61 @@
+---
+title: "DCMA"
+tagline: "Sensor de picadas para caña de pesca: giroscopio, flexión y geoposición por Bluetooth."
+category: "hardware-software"
+status: "prototype"
+role: "Diseño y desarrollo (hardware, firmware, análisis de datos)"
+tech: ["esp32", "mpu6050", "raspberrypi"]
+hero: "./hero.png"
+gallery:
+  - src: "./gallery-1.png"
+    alt: "Monitorización de temperatura del sistema (radiador y cubeta) en Raspberry Pi, con gráfica en tiempo real"
+  - src: "./gallery-2.png"
+    alt: "Datos de resistencia del sensor de flexión ante movimiento intenso, suave y nulo — prototipo 1"
+  - src: "./gallery-3.png"
+    alt: "Fluctuaciones de resistencia en entorno controlado, comparativa de intensidad de movimiento"
+dates:
+  start: 2024-02-25
+metrics:
+  - label: "Ejes de medición"
+    value: "3"
+  - label: "Batería LiPo"
+    value: "2000 mAh"
+  - label: "Desafíos resueltos"
+    value: "3"
+featured: false
+order: 60
+---
+
+## Contexto
+
+DCMA (Dispositivo de Control y Medición Analógica) es un prototipo personal para instrumentar una caña de pesca: convertirla de una herramienta que se maneja a ojo en un dispositivo que mide lo que realmente pasa en cada lance y cada picada — posición en los tres ejes, flexión de la caña y geoposición — y lo transmite en tiempo real al móvil por Bluetooth.
+
+## Restricciones
+
+- El dispositivo va montado en la propia caña, así que tiene que ser ligero, de bajo consumo y aguantar una sesión de pesca completa sin recargar.
+- Las lecturas se toman en movimiento constante (lances, corriente, oleaje), no en un banco de pruebas de laboratorio — el ruido de sensor es la norma, no la excepción.
+- Sin cable ni pantalla propia: toda la interacción es por LEDs de estado y Bluetooth al móvil.
+
+## Arquitectura
+
+- **Microcontrolador**: ESP32 NodeMCU, centro de procesamiento y control.
+- **Sensor de movimiento**: MPU6050 (giroscopio + acelerómetro), mide la posición de la caña en los ejes X, Y y Z.
+- **Sensor de flexión**: sensor dedicado que mide cuánto se dobla la caña, para distinguir el lance de una picada real por el tamaño de la resistencia.
+- **Geoposición**: conexión Bluetooth con el móvil para registrar la ubicación durante la sesión de pesca.
+- **Indicadores**: LED RGB y LED simple como interfaz de estado, sin pantalla.
+- **Alimentación**: batería LiPo de 3,7&nbsp;V y 2000&nbsp;mAh.
+- **Diseño mecánico**: prototipado y pieza de sujeción a la caña modelados en Fusion 360.
+
+Con estos datos, el dispositivo genera representaciones 3D del comportamiento de la caña y gráficas de la fuerza del lance y la resistencia de la picada — la base para aplicaciones futuras como estimar el tamaño del pez o el momento óptimo de lance según viento y corriente.
+
+## La parte difícil
+
+Tres problemas reales aparecieron según se probaba el prototipo, cada uno con una causa distinta:
+
+- **Lecturas inestables del MPU6050**: incluso en reposo, el sensor mostraba fluctuaciones que encendían los LEDs de movimiento sin que la caña se hubiera movido. Se resolvió con un filtro de media móvil en el propio código, ajustando el tamaño de la ventana para equilibrar reducción de ruido contra velocidad de respuesta.
+- **Consumo de batería excesivo**: la LiPo se descargaba mucho más rápido de lo esperado, incluso en reposo. La causa no era una sola cosa — se optimizó el código (fuera `delay()`, dentro `millis()`, para no bloquear ejecución), se desactivó el Bluetooth cuando no hacía falta, y se añadió un modo de bajo consumo que despierta el microcontrolador por interrupción solo cuando el MPU6050 detecta un movimiento real.
+- **Calibración del MPU6050 poco fiable**: el offset del sensor variaba con la temperatura, el tiempo de uso y hasta pequeños cambios en el montaje — una calibración manual era poco práctica para un dispositivo de uso real. Se implementó una calibración automática al arrancar (lecturas en reposo para calcular el offset), guardando el resultado en la memoria flash del ESP32 para que sobreviva a un apagado, con un comando serie para forzar una recalibración cuando hace falta.
+
+## Resultado
+
+Prototipo funcional con las tres mediciones principales (posición, flexión, geoposición) operativas, validado con pruebas reales de lanzamientos y picadas de distinta intensidad (suave, media, fuerte) y sus gráficas correspondientes.

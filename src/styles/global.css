@@ -1,0 +1,90 @@
+@import "tailwindcss";
+
+@theme {
+  /* Surfaces */
+  --color-bg: #0b0e11;
+  --color-panel: #12161a;
+  --color-panel-raised: #171c21;
+  --color-border: #232a31;
+
+  /* Text */
+  --color-ink: #e6eaf0;
+  --color-ink-dim: #9aa4b0;
+  --color-ink-faint: #8a95a2;
+
+  /* Signal accent — semantic only, never decorative */
+  --color-signal: #e8ff59;
+  --color-signal-dim: #b9cc47;
+  --color-amber: #f5a524;
+  --color-status-gray: #6b7280;
+  --color-red: #ef4444;
+
+  /* Type */
+  --font-display: var(--font-display-face), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-body-face), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono-face), ui-monospace, "SFMono-Regular", monospace;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    position: relative;
+  }
+
+  /* Measurement grid reads at 4% opacity — kept on a fixed pseudo-layer so
+     it never competes with foreground text contrast. */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image:
+      linear-gradient(var(--color-border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--color-border) 1px, transparent 1px);
+    background-size: 48px 48px;
+    opacity: 0.04;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+  }
+
+  ::selection {
+    background-color: var(--color-signal);
+    color: var(--color-bg);
+  }
+}
+
+@layer utilities {
+  .font-label {
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Astro's ClientRouter drives the card↔detail morph via the View
+     Transitions pseudo-elements, which the animation-duration override
+     above doesn't reach — disable those explicitly. */
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}

@@ -1,0 +1,56 @@
+---
+title: "SGRA"
+tagline: "Monitorización remota de aljibe por LoRa, con detección de anomalías del propio sensor."
+category: "hardware-software"
+status: "live"
+role: "Desarrollo full-stack + hardware (backend, frontend, telemetría LoRa, despliegue)"
+client: "Aguas del Servalillo"
+tech: ["python", "fastapi", "vue", "influxdb", "mqtt", "esp32", "lora", "telegraf", "starlark", "jsn_sr04t", "chartjs", "leaflet", "docker"]
+hero: "./hero.png"
+thumbnail: "./thumbnail.png"
+gallery:
+  - src: "./gallery-1.png"
+    alt: "Panel de control SGRA — nivel del aljibe en tiempo real"
+  - src: "./gallery-2.png"
+    alt: "Histórico de lecturas del aljibe, consumo diario y tendencia"
+  - src: "./gallery-3.png"
+    alt: "Análisis de despeje de la zona de Fresnel para el enlace LoRa"
+dates:
+  start: 2026-05-01
+metrics:
+  - label: "Alcance del enlace LoRa"
+    value: "1,65 km"
+  - label: "Banda de radio"
+    value: "868 MHz"
+  - label: "Nodos LoRa"
+    value: "2"
+featured: true
+order: 30
+---
+
+## Contexto
+
+SGRA monitoriza en remoto el nivel de un aljibe de riego agrícola para un cliente real, Aguas del Servalillo: un nodo con sensor ultrasónico mide la distancia a la superficie del agua y transmite por LoRa a una pasarela situada a 1,65&nbsp;km, que sube los datos a un dashboard web. El objetivo es que el cliente sepa el nivel del depósito sin desplazarse hasta él, y reciba una alerta si el nivel baja de forma anómala.
+
+## Restricciones
+
+- El sensor ultrasónico (JSN-SR04T) mide distancia por eco — cualquier cosa que interrumpa el haz entre el sensor y la superficie real del agua (como el propio chorro de llenado) contamina la lectura, y el sistema tiene que distinguir eso de un cambio de nivel real.
+- El enlace LoRa opera al límite de su alcance práctico (1,65&nbsp;km), así que el sistema tiene que tolerar huecos de datos sin que el dashboard los interprete como una caída de nivel real.
+- Todo corre en una Raspberry Pi en las instalaciones del cliente — sin infraestructura cloud de por medio.
+
+## Arquitectura
+
+- **Telemetría**: nodo ESP32 con sensor JSN-SR04T, transmisión LoRa a 868&nbsp;MHz hasta una pasarela que republica por MQTT (Mosquitto).
+- **Ingesta**: Telegraf suscrito al broker MQTT, con un procesador Starlark embebido que aplica filtrado y detección de anomalías antes de escribir en InfluxDB 2.7 — el filtrado vive en la capa de ingesta, no en el backend, así los datos crudos y los ya depurados quedan ambos disponibles como series independientes.
+- **Backend**: FastAPI (Python), sirve la API del dashboard y gestiona alertas por email configurables (nivel bajo, fuga, llenado, sin datos).
+- **Frontend**: Vue 3 (Composition API) + Chart.js para las series temporales, Leaflet para el seguimiento de un nodo secundario con GPS por 4G — todo desplegado vía Docker Compose en la propia Raspberry Pi.
+
+## La parte difícil
+
+El gráfico del dashboard mostraba saltos físicamente imposibles — un 20% pasando a un 64% en 10 minutos, lo que implicaría un caudal de miles de litros por segundo. La hipótesis inicial (ruido normal del oleaje durante el llenado, solucionable con más suavizado) era incorrecta: suavizar una lectura que mide la cosa equivocada solo produce un promedio de dos cosas equivocadas. La causa real era que, durante el llenado, el eco del sensor a veces rebotaba en el propio chorro de agua o la salpicadura en vez de en la superficie real.
+
+La solución no fue suavizar más, sino exigir consenso antes de aceptar un salto grande: una nueva lectura solo se acepta como válida si varias lecturas crudas consecutivas son coherentes entre sí (rango por debajo de una tolerancia). Mientras el chorro interfiere, cada lectura rebota en un punto distinto de la salpicadura y nunca hay una racha estable — en cuanto el chorro deja de interferir, la coherencia vuelve casi al instante. Validado contra un episodio real de ~19&nbsp;horas de ruido en datos históricos antes de desplegarlo: el valor confirmado se mantuvo estable durante todo el episodio, sin un solo salto en falso. La misma señal de "lecturas inconsistentes" se reutilizó para un indicador de "llenando" en el dashboard, sin necesitar un detector aparte.
+
+## Resultado
+
+Sistema en producción real para el cliente, con alertas configurables y un dashboard que distingue una lectura ruidosa de un cambio de nivel real. El mismo proyecto incluye un nodo secundario de seguimiento GPS por 4G, con un visor de trayectos donde el mapa, la línea de tiempo y el gráfico de velocidad quedan sincronizados: pasar el cursor por un punto de cualquiera de los tres se refleja al milímetro en los otros dos.

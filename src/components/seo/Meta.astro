@@ -1,0 +1,32 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+}
+
+const { title, description, image } = Astro.props;
+const siteName = 'Sergio Seva Rayos';
+const fullTitle = title === siteName ? title : `${title} — ${siteName}`;
+// Astro.site is unset until the deploy phase (astro.config.mjs `site` field) —
+// fall back to the request's own origin so the canonical is still a valid
+// absolute URL during local dev/build instead of a bare path.
+const siteOrigin = Astro.site ?? Astro.url.origin;
+const canonicalURL = new URL(Astro.url.pathname, siteOrigin);
+const ogImage = image ? new URL(image, siteOrigin) : undefined;
+---
+
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonicalURL} />
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonicalURL} />
+{ogImage && <meta property="og:image" content={ogImage} />}
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+{ogImage && <meta name="twitter:image" content={ogImage} />}

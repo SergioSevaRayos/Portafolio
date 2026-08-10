@@ -1,0 +1,50 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import StatusBadge from './StatusBadge.astro';
+import TechChip from './TechChip.astro';
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+}
+
+const { project } = Astro.props;
+const { title, tagline, status, category, tech, hero, thumbnail } = project.data;
+const cardImage = thumbnail ?? hero;
+const href = `/proyectos/${project.id}`;
+---
+
+<a
+  href={href}
+  data-category={category}
+  data-tech={tech.join(',')}
+  class="group flex flex-col h-full rounded-lg border border-border bg-panel overflow-hidden transition-colors hover:border-signal/50 relative"
+>
+  <span class="pointer-events-none absolute left-2 top-2 h-3 w-3 border-l border-t border-border transition-colors group-hover:border-signal" aria-hidden="true"></span>
+  <span class="pointer-events-none absolute right-2 top-2 h-3 w-3 border-r border-t border-border transition-colors group-hover:border-signal" aria-hidden="true"></span>
+  <span class="pointer-events-none absolute left-2 bottom-2 h-3 w-3 border-l border-b border-border transition-colors group-hover:border-signal" aria-hidden="true"></span>
+  <span class="pointer-events-none absolute right-2 bottom-2 h-3 w-3 border-r border-b border-border transition-colors group-hover:border-signal" aria-hidden="true"></span>
+
+  <div class="aspect-[16/10] overflow-hidden bg-panel-raised" transition:name={`hero-${project.id}`}>
+    <Image
+      src={cardImage}
+      alt={title}
+      width={640}
+      height={400}
+      class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+    />
+  </div>
+
+  <div class="p-4 flex flex-col flex-1">
+    <div class="flex items-center justify-between gap-2 mb-2">
+      <h3 class="font-display font-bold text-ink text-base truncate min-w-0" transition:name={`title-${project.id}`}>
+        {title}
+      </h3>
+      <StatusBadge status={status} transitionName={`status-${project.id}`} />
+    </div>
+    <p class="text-sm text-ink-dim mb-3 line-clamp-2 min-h-[2.5rem]">{tagline}</p>
+    <div class="flex flex-wrap gap-1.5 h-14 content-start overflow-hidden mt-auto">
+      {tech.slice(0, 4).map((slug) => <TechChip slug={slug} />)}
+    </div>
+  </div>
+</a>

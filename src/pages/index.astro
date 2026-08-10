@@ -1,0 +1,82 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import heroPhoto from '../assets/sergio-hero.jpg';
+
+const interests = ['Arduino', 'ESP32', 'Raspberry Pi', 'Sensores y actuadores', 'Robótica', 'Docencia'];
+---
+
+<Base
+  title="Sergio Seva Rayos"
+  description="Desarrollador de software y hardware — aplicaciones web, e-commerce y sistemas IoT en producción."
+>
+  <section class="mx-auto max-w-6xl px-6 pt-20 pb-10">
+    <div class="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-10 items-start mb-14">
+      <div>
+        <p class="font-label text-signal text-xs mb-4">Sergio Seva Rayos — full-stack, robótica e IoT</p>
+        <h1 class="font-display text-4xl sm:text-6xl font-bold text-ink max-w-3xl leading-[1.05] mb-6">
+          Desarrollo software y hardware que se mide, no se adivina.
+        </h1>
+        <p class="text-ink-dim max-w-xl mb-10">
+          Aplicaciones web, e-commerce y sistemas IoT en producción real — desde el backend hasta el sensor
+          que le manda los datos.
+        </p>
+        <div class="flex flex-wrap gap-4">
+          <a
+            href="/proyectos"
+            class="font-label text-xs px-5 py-3 rounded-full bg-signal text-bg font-medium hover:bg-signal-dim transition-colors"
+          >
+            Ver proyectos
+          </a>
+          <a
+            href="/sobre-mi"
+            class="font-label text-xs px-5 py-3 rounded-full border border-border text-ink-dim hover:border-signal hover:text-signal transition-colors"
+          >
+            Sobre mí
+          </a>
+        </div>
+      </div>
+
+      <div class="relative order-first lg:order-last mx-auto lg:mx-0 w-48 lg:w-full">
+        <div class="aspect-[3/4] overflow-hidden rounded-lg border border-border bg-panel-raised">
+          <Image
+            src={heroPhoto}
+            alt="Sergio Seva Rayos"
+            width={560}
+            height={747}
+            class="w-full h-full object-cover"
+          />
+        </div>
+        <span class="pointer-events-none absolute left-2 top-2 h-3 w-3 border-l border-t border-signal" aria-hidden="true"></span>
+        <span class="pointer-events-none absolute right-2 top-2 h-3 w-3 border-r border-t border-signal" aria-hidden="true"></span>
+        <span class="pointer-events-none absolute left-2 bottom-2 h-3 w-3 border-l border-b border-signal" aria-hidden="true"></span>
+        <span class="pointer-events-none absolute right-2 bottom-2 h-3 w-3 border-r border-b border-signal" aria-hidden="true"></span>
+      </div>
+    </div>
+
+    <div class="border-t border-border pt-10">
+      <p class="font-label text-ink-faint text-xs mb-6">Quién soy</p>
+      <div class="max-w-2xl text-ink-dim leading-relaxed space-y-4 mb-6">
+        <p>
+          Estudié Automatización y Robótica Industrial (ARI), y ahí empezó todo: descubrí la robótica y no he
+          dejado de cacharrear desde entonces — Arduino, Raspberry Pi, ESP32, sensores, relés, motores,
+          variadores de frecuencia, cualquier placa que reciba una señal o la produzca.
+        </p>
+        <p>
+          De ahí salté a programar, y estudié Desarrollo de Aplicaciones Web (DAW) para unir los dos mundos —
+          que es exactamente lo que hago hoy. También doy charlas de robótica y tecnología cada año en el
+          colegio de mis hijas, de 1º a 6º de primaria.
+        </p>
+      </div>
+      <div class="flex flex-wrap gap-1.5">
+        {
+          interests.map((interest) => (
+            <span class="font-label text-[0.65rem] px-2.5 py-1 rounded-full border border-border text-ink-dim">
+              {interest}
+            </span>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Base>

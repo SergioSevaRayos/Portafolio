@@ -1,0 +1,55 @@
+---
+title: "DCIEN"
+tagline: "E-commerce de streetwear de edición numerada, backend PHP a medida sin framework."
+category: "ecommerce"
+status: "live"
+role: "Desarrollo full-stack (frontend + backend + despliegue)"
+tech: ["astro", "php", "mysql", "stripe", "tailwind"]
+hero: "./hero.png"
+gallery:
+  - src: "./gallery-1.png"
+    alt: "Sección Filosofía del sitio DCIEN — producción cerrada de 100 unidades"
+  - src: "./gallery-2.png"
+    alt: "Archivo fotográfico de DCIEN, series y equipamiento"
+  - src: "./gallery-3.png"
+    alt: "Blog de DCIEN con artículos sobre CrossFit y HYROX"
+links:
+  live: "https://d-cien.es"
+dates:
+  start: 2026-02-01
+metrics:
+  - label: "Unidades por serie"
+    value: "100"
+  - label: "Series activas"
+    value: "12"
+  - label: "Sin reediciones"
+    value: "0"
+featured: true
+order: 10
+---
+
+## Contexto
+
+DCIEN vende streetwear de producción cerrada: cada serie son 100 prendas numeradas físicamente, sin reposición una vez agotadas. Ese modelo — inventario fijo, numeración única por unidad, sin restock — es la exigencia real detrás de cada decisión técnica del proyecto: el sistema tenía que garantizar que dos personas nunca pudieran comprar la misma unidad numerada, incluso con tráfico simultáneo en el lanzamiento de una serie.
+
+## Restricciones
+
+- Sin presupuesto para un framework backend con licencia o infraestructura gestionada — el hosting es compartido (Hostinger), PHP puro sin Composer más allá de librerías puntuales.
+- Pagos reales con Stripe, que exige manejar con cuidado el estado de una compra a medio completar (usuario abandona el checkout con una unidad ya bloqueada).
+- El catálogo de series es contenido editorial que cambia con frecuencia (nuevas series, series que se agotan) — no puede vivir solo en base de datos si se quiere iterar rápido sobre copy y SEO.
+
+## Arquitectura
+
+- **Frontend**: Astro en salida estática, Tailwind para estilos. El catálogo de series vive en un fichero TypeScript tipado (`src/data/series.ts`) que actúa como fuente de verdad de contenido — la base de datos solo gestiona el estado de venta de cada una de las 100 unidades por serie, no el contenido editorial.
+- **Backend**: PHP puro, deliberadamente sin framework — cada endpoint es un fichero individual bajo `api/`, autenticación por sesiones PHP con cookies `httpOnly`. En un hosting compartido sin control total del entorno, un framework grande añade una capa de configuración (rutas, contenedor de dependencias, cache de config) que aquí no compensa frente a la simplicidad de ficheros sueltos.
+- **Base de datos**: MySQL. Cada unidad numerada de cada serie es una fila propia con su propio estado (`available` / `checkout` / `sold`), no un contador — así una unidad concreta puede bloquearse individualmente durante el pago sin afectar al resto del stock.
+- **Pagos**: Stripe Checkout. La `cancel_url` apunta a un endpoint propio que libera la unidad reservada y limpia el pedido huérfano si el cliente abandona el pago, en vez de dejarla bloqueada indefinidamente.
+- **Panel de administración**: gestiona el pipeline de pedidos (Nuevos → Producción → Enviados) y genera la documentación de envío en PDF (Dompdf) con las imágenes de producto incrustadas.
+
+## La parte difícil
+
+Con inventario fijo de 100 unidades numeradas y sin reposición, el problema real no es el checkout en sí — es evitar que dos compradores se lleven la misma unidad cuando ambos abren el checkout casi a la vez, y evitar que una unidad quede bloqueada para siempre porque alguien cerró la pestaña a medio pagar. La solución fue tratar cada unidad como una fila con estado propio (`available` → `checkout` → `sold`) en vez de un contador de stock: reservar una unidad concreta es una escritura atómica sobre esa fila, y tanto el `cancel_url` de Stripe como un proceso de limpieza revierten `checkout` → `available` si el pago no se completa. Nada de esto necesitaba colas ni locks distribuidos — con MySQL y una máquina de estados por fila fue suficiente para el volumen real del negocio.
+
+## Resultado
+
+Sistema en producción gestionando el ciclo completo: catálogo → compra → pago → producción → envío, con panel propio para el equipo sin depender de un backoffice de terceros. Se han vendido varias series completas de 100 unidades sin incidencias de doble venta.

@@ -1,0 +1,55 @@
+---
+title: "DCIEN Gestión Box"
+tagline: "SaaS multi-tenant para box de entrenamiento: reservas, clases, marcas personales y facturación por Stripe."
+category: "web-app"
+status: "field-testing"
+role: "Desarrollo full-stack (Laravel + Filament)"
+tech: ["laravel", "php", "sqlite", "stripe", "tailwind", "vite"]
+hero: "./hero.png"
+gallery:
+  - src: "./gallery-1.png"
+    alt: "Panel del atleta — resumen de clases y bono activo"
+  - src: "./gallery-2.png"
+    alt: "Panel del gimnasio — pagos pendientes, WODs y clases del día"
+  - src: "./gallery-3.png"
+    alt: "Panel de plataforma — gimnasios activos, usuarios y tráfico del sistema"
+links:
+  live: "https://dciengestionbox.es"
+dates:
+  start: 2026-05-18
+metrics:
+  - label: "Paneles de gestión"
+    value: "3"
+  - label: "Modelos de datos"
+    value: "17"
+  - label: "Facturación"
+    value: "Stripe"
+featured: true
+order: 35
+---
+
+## Contexto
+
+Un box de entrenamiento funcional (CrossFit y similares) necesita mucho más que una agenda: reservas por clase con aforo limitado, seguimiento de marcas personales y WODs de referencia, y una suscripción que hay que cobrar mes a mes sin que alguien se quede fuera por un pago fallido — o dentro, sin haber pagado. DCIEN Gestión Box es un SaaS multi-tenant donde cada box es un cliente independiente con su propio calendario, sus propias clases y su propia marca.
+
+## Restricciones
+
+- **Multi-tenant real**: cada gimnasio (`Gym`) tiene sus propias clases, horarios, sesiones, paquetes y usuarios, sin mezclarse con los de otro box en la misma plataforma.
+- El acceso de cada gimnasio a la plataforma depende de si su suscripción está al día — el sistema tiene que reaccionar a eventos de facturación de Stripe, no solo a una acción manual de un administrador.
+- Tres audiencias distintas necesitan su propio panel: el dueño de la plataforma, el dueño de cada box, y el propio sistema (logs, estadísticas) — con permisos y vistas que no se pueden mezclar.
+
+## Arquitectura
+
+- Laravel 12 + Filament 3 para los tres paneles de administración: uno de plataforma (altas de gimnasios, suscripciones), uno por gimnasio (clases, reservas, alumnos, marcas) y uno de sistema (logs, estadísticas globales).
+- Modelos de dominio propios de un box: `ClassType` y `GymSession` para las clases y su aforo, `Booking`/`BookingLog` para las reservas y su histórico (auditado con Spatie Activity Log), `Workout`/`PersonalRecord`/`BenchmarkRecord` para el seguimiento de WODs y marcas personales.
+- **Facturación por suscripción con Stripe**: cada gimnasio es un cliente de Stripe; un webhook escucha los eventos de cobro y activa o bloquea el acceso del gimnasio a la plataforma automáticamente según si el pago se ha completado o ha fallado.
+- **Cada gimnasio tiene su propia PWA instalable**: un manifest se genera dinámicamente por gimnasio (`/manifest/{gym:slug}.json`) con el nombre y el logo de esa marca concreta — cada box puede instalarse en el móvil de sus alumnos con su propia identidad, sin ser una app genérica de la plataforma.
+- SQLite como base de datos, una decisión deliberada de simplicidad de despliegue frente a gestionar un servidor MySQL aparte.
+
+## La parte difícil
+
+El acceso a la plataforma no lo decide un administrador a mano, lo decide Stripe: cuando un cobro falla o una suscripción se cancela, un webhook bloquea el acceso de ese gimnasio en el mismo momento; cuando el cobro se recupera, lo desbloquea. Eso significa tratar el estado de "suscrito" de cada gimnasio como un reflejo directo de la facturación real, no como un campo que alguien actualiza — con la fiabilidad que exige una integración por webhook (verificación de firma de Stripe, manejo de eventos duplicados o fuera de orden) para que un gimnasio nunca se quede bloqueado por error ni facturando sin haber pagado.
+
+## Resultado
+
+Plataforma en pruebas de campo con la arquitectura multi-tenant completa funcionando: gestión de clases y reservas, seguimiento de rendimiento de los atletas, facturación automática por Stripe y una PWA de marca propia por cada gimnasio.

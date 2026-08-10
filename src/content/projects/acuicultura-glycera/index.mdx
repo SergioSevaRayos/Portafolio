@@ -1,0 +1,68 @@
+---
+title: "Acuicultura de Glycera dibranchiata"
+tagline: "Estudio de un año sobre la viabilidad de mantener en cautividad un poliqueto usado como cebo de pesca."
+category: "hardware-software"
+status: "prototype"
+role: "Diseño del sistema y del protocolo de estudio"
+tech: ["raspberrypi", "pt100"]
+hero: "./hero.svg"
+dates:
+  start: 2024-01-01
+metrics:
+  - label: "Fases del ciclo"
+    value: "5"
+  - label: "Duración del ciclo"
+    value: "24 semanas"
+  - label: "Estudio de campo"
+    value: "1 año"
+featured: false
+order: 70
+---
+
+## Contexto
+
+*Glycera dibranchiata* es un poliqueto marino muy demandado como cebo de pesca, y hasta ahora depende casi por completo de la extracción del medio natural. La pregunta de partida era simple: ¿se puede mantener y criar en cautividad, con un sistema controlado, en vez de depender solo de la extracción?
+
+## Restricciones
+
+- El ciclo reproductivo natural del poliqueto dura mucho más de lo práctico para un sistema de cría gestionable — había que comprimirlo sin romper las señales biológicas que dependen de la temperatura y la luz.
+- Un sistema con múltiples recipientes necesita recirculación de agua y oxigenación constante para no generar puntos muertos de calidad de agua entre tandas.
+- Cualquier conclusión tenía que salir de datos reales sostenidos en el tiempo, no de una prueba corta — el estudio se extendió durante un año completo.
+
+## Arquitectura
+
+- **Sistema físico**: varios recipientes con recirculación de agua y oxigenación, controlados por una Raspberry Pi.
+- **Control de temperatura**: sensores PT100 por recipiente, para mantener cada fase dentro de su rango térmico exacto.
+- **Fotoperiodo simulado**: iluminación controlada por PWM que imita la salida y puesta del sol, ajustando gradualmente la proporción de horas de luz y oscuridad según la fase.
+- **Protocolo de 5 fases**, diseñado para replicar el ciclo metabólico natural completo en 24 semanas (6 meses):
+
+| Fase | Temperatura | Fotoperiodo | Duración |
+|---|---|---|---|
+| Larva | 12–14 °C | 12L:12D | 4–6 semanas |
+| Crecimiento juvenil | 14–16 °C | 14L:10D | 8–10 semanas |
+| Pre-adulto | 16–18 °C | 16L:8D | 10–12 semanas |
+| Maduración sexual | 12–14 °C (−4 °C) | 12L:12D | 4–6 semanas |
+| Reproducción | 10–12 °C | 10L:14D | 1–2 semanas |
+
+Cada fase no es solo una temperatura fija, sino una rampa: la tabla completa incluye el sentido y la magnitud del cambio térmico entre fases (incrementos de 2 °C en el crecimiento, un descenso de 4 °C para inducir la maduración sexual), reproduciendo las señales estacionales que en el medio natural dispara el propio mar.
+
+<video
+  src="/videos/acuicultura-movimiento.mp4"
+  autoplay
+  muted
+  loop
+  playsinline
+  controls
+  class="w-full rounded-lg border border-border bg-panel-raised"
+></video>
+<p class="font-label text-[0.65rem] text-ink-faint -mt-4 mb-6">Fragmento real del sistema — actividad en el tanque durante una de las fases activas.</p>
+
+## La parte difícil
+
+La pregunta inicial — ¿es viable criarlos de principio a fin en cautividad, sosteniendo el ciclo activo de crecimiento y reproducción de forma indefinida? — resultó no ser la pregunta útil. Tras un año de datos, la cría activa prolongada no se sostenía como sistema de producción continuo. Lo que sí demostró ser viable fue algo distinto: aletargar a los individuos e inducir un estado de hibernación controlada, en vez de mantenerlos en su ciclo metabólico activo.
+
+Ese giro cambia por completo la aplicación práctica del sistema: no es una piscifactoría de reproducción continua, es un método de conservación. Un individuo aletargado se puede importar y distribuir vivo sin necesidad de sostener todo el ciclo reproductivo en destino — que es precisamente lo que hace falta para comercializarlo como cebo de pesca.
+
+## Resultado
+
+La conclusión real del estudio: la cría prolongada no es el camino, pero **inducir hibernación sí lo es** — y eso habilita la importación y distribución en vivo del poliqueto como cebo de pesca, sin depender de sostener un ciclo de cría activo en destino.
