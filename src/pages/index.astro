@@ -57,18 +57,12 @@ const interests = ['Arduino', 'ESP32', 'Raspberry Pi', 'Sensores y actuadores', 
 
     <div class="border-t border-border pt-10">
       <p class="font-label text-ink-faint text-xs mb-6">Quién soy</p>
-      <div class="max-w-2xl text-ink-dim leading-relaxed space-y-4 mb-6">
-        <p>
-          Estudié Automatización y Robótica Industrial (ARI), y ahí empezó todo: descubrí la robótica y no he
-          dejado de cacharrear desde entonces — Arduino, Raspberry Pi, ESP32, sensores, relés, motores,
-          variadores de frecuencia, cualquier placa que reciba una señal o la produzca.
-        </p>
-        <p>
-          De ahí salté a programar, y estudié Desarrollo de Aplicaciones Web (DAW) para unir los dos mundos —
-          que es exactamente lo que hago hoy. También doy charlas de robótica y tecnología cada año en el
-          colegio de mis hijas, de 1º a 6º de primaria.
-        </p>
-      </div>
+      <p class="max-w-2xl text-ink-dim leading-relaxed mb-6">
+        De la robótica industrial a la programación web, sin soltar nunca el soldador —
+        <a href={withBase('/sobre-mi')} class="text-signal hover:text-signal-dim underline underline-offset-4">
+          mi historia completa aquí
+        </a>.
+      </p>
       <div class="flex flex-wrap gap-1.5">
         {
           interests.map((interest) => (
